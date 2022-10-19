@@ -127,7 +127,7 @@ namespace LR_WEB_API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Ports", b =>
+            modelBuilder.Entity("Entities.Models.Port", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,7 +154,7 @@ namespace LR_WEB_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ports");
+                    b.ToTable("Port");
 
                     b.HasData(
                         new
@@ -183,7 +183,7 @@ namespace LR_WEB_API.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Entities.Models.Ships", b =>
+            modelBuilder.Entity("Entities.Models.Ship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -207,7 +207,7 @@ namespace LR_WEB_API.Migrations
 
                     b.HasIndex("PortsId");
 
-                    b.ToTable("Ships");
+                    b.ToTable("Ship");
 
                     b.HasData(
                         new
@@ -241,16 +241,16 @@ namespace LR_WEB_API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Entities.Models.Ports", null)
-                        .WithMany("Ships")
+                    b.HasOne("Entities.Models.Port", null)
+                        .WithMany("Ship")
                         .HasForeignKey("PortsId");
 
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("Entities.Models.Ships", b =>
+            modelBuilder.Entity("Entities.Models.Ship", b =>
                 {
-                    b.HasOne("Entities.Models.Ports", "Port")
+                    b.HasOne("Entities.Models.Port", "Port")
                         .WithMany()
                         .HasForeignKey("PortsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -264,9 +264,9 @@ namespace LR_WEB_API.Migrations
                     b.Navigation("Employees");
                 });
 
-            modelBuilder.Entity("Entities.Models.Ports", b =>
+            modelBuilder.Entity("Entities.Models.Port", b =>
                 {
-                    b.Navigation("Ships");
+                    b.Navigation("Ship");
                 });
 #pragma warning restore 612, 618
         }

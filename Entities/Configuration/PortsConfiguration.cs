@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Entities.Configuration
 {
-    public class PortsConfiguration : IEntityTypeConfiguration<Ports>
+    public class PortsConfiguration : IEntityTypeConfiguration<Port>
     {
-        public void Configure(EntityTypeBuilder<Ports> builder)
+        public void Configure(EntityTypeBuilder<Port> builder)
         {
             builder.HasData
             (
-            new Ports
+            new Port
             {
                 Id = new Guid("c9d4c053-49b6-410c-bc78-2d54a9991053"),
                 Title = "Port of Baltimore",
@@ -23,7 +23,7 @@ namespace Entities.Configuration
                 Capacity = 130,
                 Type = "Maritime"
             },
-            new Ports
+            new Port
             {
                 Id = new Guid("3d490a70-94ce-4d15-9494-5248280c2a70"),
                 Title = "Northern river port",
@@ -31,7 +31,7 @@ namespace Entities.Configuration
                 Capacity = 75,
                 Type = "River"
             },
-            new Ports
+            new Port
             {
                 Id = new Guid("3d490a70-94ce-4d15-9494-5248280c294c"),
                 Title = "Novorossiysk seaport",

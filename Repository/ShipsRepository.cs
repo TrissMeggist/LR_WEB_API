@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class ShipsRepository : RepositoryBase<Ships>, IShipsRepository
+    public class ShipsRepository : RepositoryBase<Ship>, IShipsRepository
     {
         public ShipsRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)

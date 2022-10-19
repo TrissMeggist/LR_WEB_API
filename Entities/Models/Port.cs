@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Entities.Models
 {
-    public class Ports
+    public class Port
     {
         [Column("PortsId")]
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "Ports title is a required field.")]
+        [Required(ErrorMessage = "Port title is a required field.")]
         [MaxLength(30, ErrorMessage = "Maximum length for the Title is 30 characters.")] public string Title { get; set; }
         
         [Required(ErrorMessage = "Country is a required field.")]

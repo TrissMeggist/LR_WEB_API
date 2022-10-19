@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Entities.Configuration
 {
-    public class ShipsConfiguration : IEntityTypeConfiguration<Ships>
+    public class ShipsConfiguration : IEntityTypeConfiguration<Ship>
     {
-        public void Configure(EntityTypeBuilder<Ships> builder)
+        public void Configure(EntityTypeBuilder<Ship> builder)
         {
             builder.HasData
             (
-            new Ships
+            new Ship
             {
                 Id = new Guid("80abbca8-664d-4b20-b5de-024705497ca8"),
                 Title = "Baikal",
@@ -23,7 +23,7 @@ namespace Entities.Configuration
                 PortsId = new Guid("3d490a70-94ce-4d15-9494-5248280c2a70")
 
             },
-            new Ships
+            new Ship
             {
                 Id = new Guid("86dba8c0-d178-41e7-938c-ed49778fb8c0"),
                 Title = "Maxim Gorkiy",
@@ -31,7 +31,7 @@ namespace Entities.Configuration
                 PortsId = new Guid("3d490a70-94ce-4d15-9494-5248280c294c")
 
             },
-            new Ships
+            new Ship
             {
                 Id = new Guid("021ca3c1-0deb-4afd-ae94-2159a84793c1"),
                 Title = "USS Nimitz (CVN-68)",

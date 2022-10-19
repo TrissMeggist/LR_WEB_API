@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository
 {
-    public class PortsRepository : RepositoryBase<Ports>, IPortsRepository
+    public class PortsRepository : RepositoryBase<Port>, IPortsRepository
     {
         public PortsRepository(RepositoryContext repositoryContext)
         : base(repositoryContext)

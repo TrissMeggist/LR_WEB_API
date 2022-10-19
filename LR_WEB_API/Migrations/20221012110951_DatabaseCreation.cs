@@ -24,7 +24,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ports",
+                name: "Port",
                 columns: table => new
                 {
                     PortsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -61,12 +61,12 @@ namespace LR_WEB_API.Migrations
                     table.ForeignKey(
                         name: "FK_Employees_Ports_PortsId",
                         column: x => x.PortsId,
-                        principalTable: "Ports",
+                        principalTable: "Port",
                         principalColumn: "PortsId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ships",
+                name: "Ship",
                 columns: table => new
                 {
                     ShipsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -80,7 +80,7 @@ namespace LR_WEB_API.Migrations
                     table.ForeignKey(
                         name: "FK_Ships_Ports_PortsId",
                         column: x => x.PortsId,
-                        principalTable: "Ports",
+                        principalTable: "Port",
                         principalColumn: "PortsId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -95,7 +95,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Ports",
+                table: "Port",
                 columns: new[] { "PortsId", "Capacity", "Country", "Title", "Type" },
                 values: new object[,]
                 {
@@ -115,7 +115,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Ships",
+                table: "Ship",
                 columns: new[] { "ShipsId", "Class", "PortsId", "Title" },
                 values: new object[,]
                 {
@@ -136,7 +136,7 @@ namespace LR_WEB_API.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ships_PortsId",
-                table: "Ships",
+                table: "Ship",
                 column: "PortsId");
         }
 
@@ -146,13 +146,13 @@ namespace LR_WEB_API.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Ships");
+                name: "Ship");
 
             migrationBuilder.DropTable(
                 name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Ports");
+                name: "Port");
         }
     }
 }
