@@ -15,5 +15,9 @@ namespace Repository
         : base(repositoryContext)
         {
         }
+        public IEnumerable<Ship> GetAllShips(bool trackChanges) =>
+        FindAll(trackChanges)
+         .OrderBy(c => c.Title)
+         .ToList();
     }
 }

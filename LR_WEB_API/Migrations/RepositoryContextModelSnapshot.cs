@@ -82,7 +82,7 @@ namespace LR_WEB_API.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.Property<Guid?>("PortsId")
+                    b.Property<Guid?>("PortId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Position")
@@ -94,7 +94,7 @@ namespace LR_WEB_API.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("PortsId");
+                    b.HasIndex("PortId");
 
                     b.ToTable("Employees");
 
@@ -152,7 +152,7 @@ namespace LR_WEB_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Port");
+                    b.ToTable("Ports");
 
                     b.HasData(
                         new
@@ -205,7 +205,7 @@ namespace LR_WEB_API.Migrations
 
                     b.HasIndex("PortsId");
 
-                    b.ToTable("Ship");
+                    b.ToTable("Ships");
 
                     b.HasData(
                         new
@@ -240,8 +240,8 @@ namespace LR_WEB_API.Migrations
                         .IsRequired();
 
                     b.HasOne("Entities.Models.Port", null)
-                        .WithMany("Ship")
-                        .HasForeignKey("PortsId");
+                        .WithMany("Ships")
+                        .HasForeignKey("PortId");
 
                     b.Navigation("Company");
                 });
@@ -264,7 +264,7 @@ namespace LR_WEB_API.Migrations
 
             modelBuilder.Entity("Entities.Models.Port", b =>
                 {
-                    b.Navigation("Ship");
+                    b.Navigation("Ships");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,7 +24,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Port",
+                name: "Ports",
                 columns: table => new
                 {
                     PortsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -47,7 +47,7 @@ namespace LR_WEB_API.Migrations
                     Age = table.Column<int>(type: "int", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PortsId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    PortId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,14 +59,14 @@ namespace LR_WEB_API.Migrations
                         principalColumn: "CompanyId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Employees_Ports_PortsId",
-                        column: x => x.PortsId,
-                        principalTable: "Port",
+                        name: "FK_Employees_Ports_PortId",
+                        column: x => x.PortId,
+                        principalTable: "Ports",
                         principalColumn: "PortsId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ship",
+                name: "Ships",
                 columns: table => new
                 {
                     ShipsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -80,7 +80,7 @@ namespace LR_WEB_API.Migrations
                     table.ForeignKey(
                         name: "FK_Ships_Ports_PortsId",
                         column: x => x.PortsId,
-                        principalTable: "Port",
+                        principalTable: "Ports",
                         principalColumn: "PortsId",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -95,7 +95,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Port",
+                table: "Ports",
                 columns: new[] { "PortsId", "Capacity", "Country", "Title", "Type" },
                 values: new object[,]
                 {
@@ -106,7 +106,7 @@ namespace LR_WEB_API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Employees",
-                columns: new[] { "EmployeeId", "Age", "CompanyId", "Name", "PortsId", "Position" },
+                columns: new[] { "EmployeeId", "Age", "CompanyId", "Name", "PortId", "Position" },
                 values: new object[,]
                 {
                     { new Guid("021ca3c1-0deb-4afd-ae94-2159a8479811"), 35, new Guid("3d490a70-94ce-4d15-9494-5248280c2ce3"), "Kane Miller", null, "Administrator" },
@@ -115,7 +115,7 @@ namespace LR_WEB_API.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "Ship",
+                table: "Ships",
                 columns: new[] { "ShipsId", "Class", "PortsId", "Title" },
                 values: new object[,]
                 {
@@ -130,13 +130,13 @@ namespace LR_WEB_API.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Employees_PortsId",
+                name: "IX_Employees_PortId",
                 table: "Employees",
-                column: "PortsId");
+                column: "PortId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ships_PortsId",
-                table: "Ship",
+                table: "Ships",
                 column: "PortsId");
         }
 
@@ -146,13 +146,13 @@ namespace LR_WEB_API.Migrations
                 name: "Employees");
 
             migrationBuilder.DropTable(
-                name: "Ship");
+                name: "Ships");
 
             migrationBuilder.DropTable(
                 name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Port");
+                name: "Ports");
         }
     }
 }

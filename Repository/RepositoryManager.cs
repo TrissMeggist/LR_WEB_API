@@ -13,6 +13,8 @@ namespace Repository
         private RepositoryContext _repositoryContext;
         private ICompanyRepository _companyRepository;
         private IEmployeeRepository _employeeRepository;
+        private IShipsRepository _shipsRepository;
+        private IPortsRepository _portsRepository;
         public RepositoryManager(RepositoryContext repositoryContext)
         {
             _repositoryContext = repositoryContext;
@@ -30,9 +32,27 @@ namespace Repository
         {
             get
             {
-            if (_employeeRepository == null)
+                if (_employeeRepository == null)
                     _employeeRepository = new EmployeeRepository(_repositoryContext);
                 return _employeeRepository;
+            }
+        }
+        public IPortsRepository Ports
+        {
+            get
+            {
+                if (_portsRepository == null)
+                    _portsRepository = new PortsRepository(_repositoryContext);
+                return _portsRepository;
+            }
+        }
+        public IShipsRepository Ships
+        {
+            get
+            {
+                if (_shipsRepository == null)
+                    _shipsRepository = new ShipsRepository(_repositoryContext);
+                return _shipsRepository;
             }
         }
         public void Save() => _repositoryContext.SaveChanges();
