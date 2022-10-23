@@ -3,37 +3,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LR_WEB_API.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
+    [ApiController]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
+        private readonly IRepositoryManager _repository;
+        public WeatherForecastController(IRepositoryManager repository)
         {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-        private ILoggerManager _logger;
-
-        public WeatherForecastController(ILoggerManager logger)
-        {
-            _logger = logger;
+            _repository = repository;
         }
-
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult<IEnumerable<string>> Get()
         {
-            _logger.LogInfo("¬от информационное сообщение от нашего контроллера значений.");
-           
-            _logger.LogDebug("¬от отладочное сообщение от нашего контроллера значений.");
-           
-            _logger.LogWarn("¬от сообщение предупреждени€ от нашего контроллера значений.");
-           
-            _logger.LogError("¬от сообщение об ошибке от нашего контроллера значений.");
 
             return new string[] { "value1", "value2" };
         }
-
-        
-       
     }
+
+
+
 }
