@@ -31,9 +31,11 @@ namespace LR_WEB_API.Extensions
         opts.UseSqlServer(configuration.GetConnectionString("sqlConnection"), b =>
         b.MigrationsAssembly("LR_WEB_API")));
 
-        public static void ConfigureRepositoryManager(this IServiceCollection services)
-        =>
+        public static void ConfigureRepositoryManager(this IServiceCollection services)=>
         services.AddScoped<IRepositoryManager, RepositoryManager>();
+        public static IMvcBuilder AddCustomCSVFormatter(this IMvcBuilder builder) =>
+        builder.AddMvcOptions(config => config.OutputFormatters.Add(new
+        CsvOutputFormatter()));
     }
 
 }

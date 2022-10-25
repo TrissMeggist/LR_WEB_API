@@ -7,7 +7,7 @@ using System;
 
 namespace LR_WEB_API.Controllers
 {
-    [Route("api/employeesis")]
+    [Route("api/companies/{companyId}/employees")]
     [ApiController]
     public class EmployeesController : ControllerBase
     {
@@ -21,11 +21,39 @@ namespace LR_WEB_API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetEmployeesis()
+        public IActionResult GetEmployeesForCompany(Guid companyId)
         {
-            var employees = _repository.Employee.GetAllEmployees(trackChanges: false);
-            var employeesDto = _mapper.Map<IEnumerable<EmployeeDTO>>(employees);
+            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+            return NotFound();
+            }
+            var employeesFromDb = _repository.Employee.GetEmployees(companyId, trackChanges: false);
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDTO>>(employeesFromDb);
             return Ok(employeesDto);
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetEmployeeForCompany(Guid companyId, Guid id)
+        {
+            var company = _repository.Company.GetCompany(companyId, trackChanges: false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with id: {companyId} doesn't exist in the database.");
+            return NotFound();
+            }
+            var employeeDb = _repository.Employee.GetEmployee(companyId, id,
+           trackChanges:
+            false);
+            if (employeeDb == null)
+            {
+                _logger.LogInfo($"Employee with id: {id} doesn't exist in the database.");
+            return NotFound();
+            }
+            var employee = _mapper.Map<EmployeeDTO>(employeeDb);
+            return Ok(employee);
+        }
+
     }
 }
