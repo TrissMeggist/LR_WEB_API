@@ -9,6 +9,9 @@ namespace Contracts
 {
     public interface IShipsRepository
     {
-        IEnumerable<Ship> GetAllShips(bool trackChanges);
+
+        IEnumerable<Ship> GetShips(Guid portsId, bool trackChanges);
+        Ship GetShip(Guid portsId, Guid id, bool trackChanges);
+
     }
 }

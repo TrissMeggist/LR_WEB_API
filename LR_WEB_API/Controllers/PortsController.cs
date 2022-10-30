@@ -22,9 +22,25 @@ namespace LR_WEB_API.Controllers
         [HttpGet]
         public IActionResult GetPorts()
         {
-            var port = _repository.Ports.GetAllPorts(trackChanges: false);
-            var portDto = _mapper.Map<IEnumerable<PortDTO>>(port);
-            return Ok(portDto);
+            var ports = _repository.Ports.GetAllPorts(trackChanges: false);
+            var portsDto = _mapper.Map<IEnumerable<PortDTO>>(ports);
+            return Ok(portsDto);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetPort(Guid id)
+        {
+            var port = _repository.Ports.GetPort(id, trackChanges: false);
+            if (port == null)
+            {
+                _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            else
+            {
+                var portDto = _mapper.Map<PortDTO>(port);
+                return Ok(portDto);
+            }
         }
     }
 }

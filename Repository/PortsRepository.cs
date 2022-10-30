@@ -19,5 +19,6 @@ namespace Repository
         FindAll(trackChanges)
          .OrderBy(c => c.Title)
          .ToList();
+        public Port GetPort(Guid portsId, bool trackChanges) => FindByCondition(c=> c.Id.Equals(portsId), trackChanges).SingleOrDefault();
     }
 }
