@@ -10,5 +10,6 @@ namespace Contracts
     public interface IPortsRepository
     {
         IEnumerable<Port> GetAllPorts(bool trackChanges);
+        Port GetPort(Guid portsId, bool trackChanges);
     }
 }

@@ -9,9 +9,10 @@ namespace LR_WEB_API.Controllers
         public MappingProfile()
         {
             CreateMap<Company, CompanyDto>().ForMember(c => c.FullAddress,opt => opt.MapFrom(x => string.Join(' ', x.Address, x.Country)));
+            CreateMap<Employee, EmployeeDTO>();
             CreateMap<Ship, ShipDTO>();
             CreateMap<Port, PortDTO>();
-            CreateMap<Employee, EmployeeDTO>();
+            
         }
     }
 }

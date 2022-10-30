@@ -15,9 +15,9 @@ namespace Repository
         : base(repositoryContext)
         {
         }
-        public IEnumerable<Ship> GetAllShips(bool trackChanges) =>
-        FindAll(trackChanges)
-         .OrderBy(c => c.Title)
-         .ToList();
+        public IEnumerable<Ship> GetShips(Guid portsId, bool trackChanges) =>
+        FindByCondition(e => e.PortsId.Equals(portsId), trackChanges).OrderBy(e => e.Title);
+        public Ship GetShip(Guid portsId, Guid id, bool trackChanges) =>
+        FindByCondition(e => e.PortsId.Equals(portsId) && e.Id.Equals(id), trackChanges).SingleOrDefault();
     }
 }
