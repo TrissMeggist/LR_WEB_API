@@ -19,5 +19,10 @@ namespace Repository
         FindByCondition(e => e.PortsId.Equals(portsId), trackChanges).OrderBy(e => e.Title);
         public Ship GetShip(Guid portsId, Guid id, bool trackChanges) =>
         FindByCondition(e => e.PortsId.Equals(portsId) && e.Id.Equals(id), trackChanges).SingleOrDefault();
+        public void CreateShipForPort(Guid portsId, Ship ship)
+        {
+            ship.PortsId = portsId;
+            Create(ship);
+        }
     }
 }
