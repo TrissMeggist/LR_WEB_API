@@ -15,7 +15,7 @@ namespace LR_WEB_API.Controllers
             CreateMap<EmployeeForCreationDto, Employee>();
 
             CreateMap<Ship, ShipDTO>();
-            CreateMap<ShipForCreationDto, Employee>();
+            CreateMap<ShipForCreationDto, Ship>();
 
             CreateMap<Port, PortDTO>();
             CreateMap<PortForCreationDto, Port>();
