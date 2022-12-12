@@ -24,5 +24,9 @@ namespace Repository
             ship.PortsId = portsId;
             Create(ship);
         }
+        public void DeleteShip(Ship ship)
+        {
+            Delete(ship);
+        }
     }
 }
