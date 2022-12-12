@@ -100,5 +100,38 @@ namespace LR_WEB_API.Controllers
             return CreatedAtRoute("PortCollection", new { ids },
             portCollectionToReturn);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePort(Guid id)
+        {
+            var port = _repository.Ports.GetPort(id, trackChanges: false);
+            if (port == null)
+            {
+                _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _repository.Ports.DeletePort(port);
+            _repository.Save();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdatePort(Guid id, [FromBody] PortForUpdateDto port)
+        {
+            if (port == null)
+            {
+                _logger.LogError("PortForUpdateDto object sent from client is null.");
+                return BadRequest("PortForUpdateDto object is null");
+            }
+            var portEntity = _repository.Ports.GetPort(id, trackChanges: true);
+            if (portEntity == null)
+            {
+                _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
+                return NotFound();
+            }
+            _mapper.Map(port, portEntity);
+            _repository.Save();
+            return NoContent();
+        }
     }
 }

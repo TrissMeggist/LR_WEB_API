@@ -13,5 +13,6 @@ namespace Contracts
         Port GetPort(Guid portsId, bool trackChanges);
         void CreatePort(Port port);
         IEnumerable<Port> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+        void DeletePort(Port port);
     }
 }

@@ -13,6 +13,6 @@ namespace Contracts
         IEnumerable<Ship> GetShips(Guid portsId, bool trackChanges);
         Ship GetShip(Guid portsId, Guid id, bool trackChanges);
         void CreateShipForPort(Guid portsId, Ship ship);
-
+        void DeleteShip(Ship ship);
     }
 }
