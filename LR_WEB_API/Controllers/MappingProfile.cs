@@ -24,6 +24,8 @@ namespace LR_WEB_API.Controllers
             CreateMap<PortForCreationDto, Port>();
             CreateMap<PortForUpdateDto, Port>();
 
+            CreateMap<UserForRegistrationDto, User>();
+
         }
     }
 }

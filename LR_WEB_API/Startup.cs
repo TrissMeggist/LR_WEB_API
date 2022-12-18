@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using NLog;
+using Repository;
 using Repository.DataShaping;
 //using ShopApi.Extensions;
 
@@ -34,6 +35,7 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddScoped<IAuthenticationManager, AuthenticationManager>();
         services.AddScoped<ValidationFilterAttribute>();
         services.AddScoped<ValidateCompanyExistsAttribute>();
         services.AddScoped<ValidatePortExistsAttribute>();
@@ -42,6 +44,9 @@ public class Startup
         services.AddScoped<IDataShaper<EmployeeDTO>, DataShaper<EmployeeDTO>>();
         services.AddScoped<IDataShaper<ShipDTO>, DataShaper<ShipDTO>>();
         services.ConfigureVersioning();
+        services.AddAuthentication();
+        services.ConfigureIdentity();
+        services.ConfigureJWT(Configuration);
         services.Configure<ApiBehaviorOptions>(options =>{options.SuppressModelStateInvalidFilter = true;});
         services.AddControllers(config =>
         {
@@ -82,6 +87,8 @@ public class Startup
         });
 
         app.UseRouting();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 
