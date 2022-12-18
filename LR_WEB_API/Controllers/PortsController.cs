@@ -4,6 +4,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using LR_WEB_API.ActionFilters;
 using LR_WEB_API.ModelBinders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ namespace LR_WEB_API.Controllers
             _logger = logger;
             _mapper = mapper;
         }
-        [HttpGet]
+        [HttpGet(Name = "GetPorts"), Authorize(Roles = "Manager")]
         public async Task<IActionResult> GetPorts()
         {
             var ports = await _repository.Ports.GetAllPortsAsync(trackChanges: false);
