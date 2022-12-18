@@ -1,4 +1,5 @@
 ﻿using Contracts;
+using LR_WEB_API.ActionFilters;
 using LR_WEB_API.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,11 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddScoped<ValidationFilterAttribute>();
+        services.AddScoped<ValidateCompanyExistsAttribute>();
+        services.AddScoped<ValidatePortExistsAttribute>();
+        services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
+        services.AddScoped<ValidateShipForPortExistsAttribute>();
         services.Configure<ApiBehaviorOptions>(options =>{options.SuppressModelStateInvalidFilter = true;});
         services.AddControllers(config =>
         {
