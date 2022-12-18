@@ -1,10 +1,12 @@
 ﻿using Contracts;
+using Entities.DataTransferObjects;
 using LR_WEB_API.ActionFilters;
 using LR_WEB_API.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using NLog;
+using Repository.DataShaping;
 //using ShopApi.Extensions;
 
 namespace ShopApi;
@@ -37,6 +39,8 @@ public class Startup
         services.AddScoped<ValidatePortExistsAttribute>();
         services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
         services.AddScoped<ValidateShipForPortExistsAttribute>();
+        services.AddScoped<IDataShaper<EmployeeDTO>, DataShaper<EmployeeDTO>>();
+        services.AddScoped<IDataShaper<ShipDTO>, DataShaper<ShipDTO>>();
         services.Configure<ApiBehaviorOptions>(options =>{options.SuppressModelStateInvalidFilter = true;});
         services.AddControllers(config =>
         {

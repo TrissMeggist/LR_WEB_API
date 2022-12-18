@@ -17,12 +17,14 @@ namespace LR_WEB_API.Controllers
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
-        private readonly IMapper _mapper;
-        public ShipsController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper)
+        private readonly IMapper _mapper; 
+        private readonly IDataShaper<ShipDTO> _dataShaper;
+        public ShipsController(IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ShipDTO> dataShaper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
         [HttpGet]
         public async Task<IActionResult> GetShipsForPorts(Guid portsId, [FromQuery] ShipParameters shipParameters)
@@ -36,7 +38,8 @@ namespace LR_WEB_API.Controllers
             var shipFromDb = await _repository.Ships.GetShipsAsync(portsId,shipParameters, trackChanges: false);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(shipFromDb.MetaData));
             var shipDTO = _mapper.Map<IEnumerable<ShipDTO>>(shipFromDb);
-            return Ok(shipDTO);
+            return Ok(_dataShaper.ShapeData(shipDTO, shipParameters.Fields));
+
         }
 
         [HttpGet("{id}", Name = "GetShipForPort")]

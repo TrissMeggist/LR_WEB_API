@@ -8,5 +8,10 @@ namespace Entities.RequestFeatures
 {
     public class ShipParameters : RequestParameters
     {
+        public ShipParameters()
+        {
+            OrderBy = "title";
+        }
+        public string SearchTerm { get; set; }
     }
 }
