@@ -22,17 +22,17 @@ namespace LR_WEB_API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public IActionResult GetPorts()
+        public async Task<IActionResult> GetPorts()
         {
-            var ports = _repository.Ports.GetAllPorts(trackChanges: false);
+            var ports = await _repository.Ports.GetAllPortsAsync(trackChanges: false);
             var portsDto = _mapper.Map<IEnumerable<PortDTO>>(ports);
             return Ok(portsDto);
         }
 
         [HttpGet("{id}", Name = "PortById")]
-        public IActionResult GetPort(Guid id)
+        public async Task<IActionResult> GetPort(Guid id)
         {
-            var port = _repository.Ports.GetPort(id, trackChanges: false);
+            var port = await _repository.Ports.GetPortAsync(id, trackChanges: false);
             if (port == null)
             {
                 _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
@@ -44,23 +44,31 @@ namespace LR_WEB_API.Controllers
                 return Ok(portDto);
             }
         }
+
         [HttpPost]
-        public IActionResult CreatePort([FromBody] PortForCreationDto port)
+        public async Task<IActionResult> CreatePort([FromBody] PortForCreationDto port)
         {
             if (port == null)
             {
                 _logger.LogError("PortForCreationDto object sent from client is null.");
             return BadRequest("PortForCreationDto object is null");
             }
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the PortForCreationDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
             var portEntity = _mapper.Map<Port>(port);
             _repository.Ports.CreatePort(portEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             var portToReturn = _mapper.Map<PortDTO>(portEntity);
             return CreatedAtRoute("PortById", new { id = portToReturn.Id }, portToReturn);
         }
 
         [HttpGet("collection/({ids})", Name = "PortCollection")]
-        public IActionResult GetPortCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        public async Task<IActionResult> GetPortCollection([ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
 
         {
             if (ids == null)
@@ -68,7 +76,7 @@ namespace LR_WEB_API.Controllers
                 _logger.LogError("Parameter ids is null");
                 return BadRequest("Parameter ids is null");
             }
-            var portEntities = _repository.Ports.GetByIds(ids, trackChanges: false);
+            var portEntities = await _repository.Ports.GetByIdsAsync(ids, trackChanges: false);
             
             if (ids.Count() != portEntities.Count())
             {
@@ -79,8 +87,9 @@ namespace LR_WEB_API.Controllers
            _mapper.Map<IEnumerable<PortDTO>>(portEntities);
             return Ok(portToReturn);
         }
+
         [HttpPost("collection")]
-        public IActionResult CreatePortCollection([FromBody]
+        public async Task<IActionResult> CreatePortCollection([FromBody]
         IEnumerable<PortForCreationDto> portCollection)
         {
             if (portCollection == null)
@@ -93,7 +102,7 @@ namespace LR_WEB_API.Controllers
             {
                 _repository.Ports.CreatePort(port);
             }
-            _repository.Save();
+            await _repository.SaveAsync();
             var portCollectionToReturn =
             _mapper.Map<IEnumerable<PortDTO>>(portEntities);
             var ids = string.Join(",", portCollectionToReturn.Select(c => c.Id));
@@ -102,35 +111,42 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePort(Guid id)
+        public async Task<IActionResult> DeletePort(Guid id)
         {
-            var port = _repository.Ports.GetPort(id, trackChanges: false);
+            var port = await _repository.Ports.GetPortAsync(id, trackChanges: false);
             if (port == null)
             {
                 _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _repository.Ports.DeletePort(port);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePort(Guid id, [FromBody] PortForUpdateDto port)
+        public async Task<IActionResult> UpdatePort(Guid id, [FromBody] PortForUpdateDto port)
         {
             if (port == null)
             {
                 _logger.LogError("PortForUpdateDto object sent from client is null.");
                 return BadRequest("PortForUpdateDto object is null");
             }
-            var portEntity = _repository.Ports.GetPort(id, trackChanges: true);
+
+            if (!ModelState.IsValid)
+            {
+                _logger.LogError("Invalid model state for the PortForUpdateDto object");
+                return UnprocessableEntity(ModelState);
+            }
+
+            var portEntity =await _repository.Ports.GetPortAsync(id, trackChanges: true);
             if (portEntity == null)
             {
                 _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
                 return NotFound();
             }
             _mapper.Map(port, portEntity);
-            _repository.Save();
+            await _repository.SaveAsync();
             return NoContent();
         }
     }

@@ -12,6 +12,6 @@ namespace Contracts
         IEmployeeRepository Employee { get; }
         IPortsRepository Ports { get; }
         IShipsRepository Ships { get; }
-        void Save();
+        Task SaveAsync();
     }
 }

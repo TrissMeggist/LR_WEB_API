@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.DataTransferObjects
 {
-    public class PortForCreationDto : PortForManipulationDto
+    public abstract class PortForManipulationDto
     {
         [Required(ErrorMessage = "Port title is a required field.")]
         [MaxLength(30, ErrorMessage = "Maximum length for the Title is 30 characters.")]
@@ -20,6 +20,5 @@ namespace Entities.DataTransferObjects
         [Required(ErrorMessage = "Type is a required field.")]
         [MaxLength(30, ErrorMessage = "Maximum length for the Type is 30 characters.")]
         public string Type { get; set; }
-        public IEnumerable<ShipForCreationDto> Ships { get; set; }
     }
 }

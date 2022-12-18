@@ -10,8 +10,8 @@ namespace Contracts
     public interface IShipsRepository
     {
 
-        IEnumerable<Ship> GetShips(Guid portsId, bool trackChanges);
-        Ship GetShip(Guid portsId, Guid id, bool trackChanges);
+        Task<IEnumerable<Ship>> GetShipsAsync(Guid portsId, bool trackChanges);
+        Task<Ship> GetShipAsync(Guid portsId, Guid id, bool trackChanges);
         void CreateShipForPort(Guid portsId, Ship ship);
         void DeleteShip(Ship ship);
     }
