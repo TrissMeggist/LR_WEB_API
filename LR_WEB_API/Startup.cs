@@ -28,6 +28,7 @@ public class Startup
     {
         services.AddAutoMapper(typeof(Startup));
         services.ConfigureCors();
+        services.ConfigureSwagger();
         services.ConfigureIISIntegration();
         services.ConfigureLoggerService();
         services.ConfigureSqlContext(Configuration);
@@ -95,6 +96,12 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+        });
+        app.UseSwagger();
+        app.UseSwaggerUI(s =>
+        {
+            s.SwaggerEndpoint("/swagger/v1/swagger.json", "Code Maze API v1");
+            s.SwaggerEndpoint("/swagger/v2/swagger.json", "Code Maze API v2");
         });
     }
 }
