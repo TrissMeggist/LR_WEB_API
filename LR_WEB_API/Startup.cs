@@ -1,6 +1,7 @@
 ﻿using Contracts;
 using LR_WEB_API.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.Patterns;
 using NLog;
 //using ShopApi.Extensions;
@@ -30,6 +31,7 @@ public class Startup
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.Configure<ApiBehaviorOptions>(options =>{options.SuppressModelStateInvalidFilter = true;});
         services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;

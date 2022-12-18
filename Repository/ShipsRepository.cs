@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -15,10 +16,13 @@ namespace Repository
         : base(repositoryContext)
         {
         }
-        public IEnumerable<Ship> GetShips(Guid portsId, bool trackChanges) =>
-        FindByCondition(e => e.PortsId.Equals(portsId), trackChanges).OrderBy(e => e.Title);
-        public Ship GetShip(Guid portsId, Guid id, bool trackChanges) =>
-        FindByCondition(e => e.PortsId.Equals(portsId) && e.Id.Equals(id), trackChanges).SingleOrDefault();
+        public async Task<IEnumerable<Ship>> GetShipsAsync(Guid portsId, bool trackChanges) =>
+        await FindByCondition(e => e.PortsId.Equals(portsId), trackChanges)
+         .OrderBy(e => e.Title)
+         .ToListAsync();
+        public async Task<Ship> GetShipAsync(Guid portsId, Guid id, bool trackChanges) =>
+        await FindByCondition(e => e.PortsId.Equals(portsId) && e.Id.Equals(id), trackChanges)
+            .SingleOrDefaultAsync();
         public void CreateShipForPort(Guid portsId, Ship ship)
         {
             ship.PortsId = portsId;

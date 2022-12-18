@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -15,13 +16,17 @@ namespace Repository
         : base(repositoryContext)
         {
         }
-        public IEnumerable<Port> GetAllPorts(bool trackChanges) =>
-        FindAll(trackChanges)
+        public async Task<IEnumerable<Port>> GetAllPortsAsync(bool trackChanges) =>
+        await FindAll(trackChanges)
          .OrderBy(c => c.Title)
-         .ToList();
-        public Port GetPort(Guid portsId, bool trackChanges) => FindByCondition(c=> c.Id.Equals(portsId), trackChanges).SingleOrDefault();
+         .ToListAsync();
+        public async Task<Port> GetPortAsync(Guid portsId, bool trackChanges) => 
+        await FindByCondition(c=> c.Id.Equals(portsId), trackChanges)
+         .SingleOrDefaultAsync();
         public void CreatePort(Port port) => Create(port);
-        public IEnumerable<Port> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>FindByCondition(x => ids.Contains(x.Id), trackChanges).ToList();
+        public async Task<IEnumerable<Port>> GetByIdsAsync(IEnumerable<Guid> ids, bool trackChanges) =>
+        await FindByCondition(x => ids.Contains(x.Id), trackChanges)
+         .ToListAsync();
         public void DeletePort(Port port)
         {
             Delete(port);
