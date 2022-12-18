@@ -27,6 +27,7 @@ namespace LR_WEB_API.Controllers
             _dataShaper = dataShaper;
         }
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetShipsForPorts(Guid portsId, [FromQuery] ShipParameters shipParameters)
         {
             var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
