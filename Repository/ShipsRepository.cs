@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Entities.RequestFeatures;
+using Repository.Extensions;
 
 namespace Repository
 {
@@ -21,6 +22,9 @@ namespace Repository
         {
             var ships = await FindByCondition(e => e.PortsId.Equals(portsId),
             trackChanges)
+            .FilterShip()
+            .Search(shipParameters.SearchTerm)
+            .Sort(shipParameters.OrderBy)
             .OrderBy(e => e.Title)
             .ToListAsync();
             return PagedList<Ship>
