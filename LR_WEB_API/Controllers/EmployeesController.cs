@@ -30,6 +30,7 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpGet]
+        [HttpHead]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId, [FromQuery] EmployeeParameters employeeParameters)
         {
             if (!employeeParameters.ValidAgeRange)

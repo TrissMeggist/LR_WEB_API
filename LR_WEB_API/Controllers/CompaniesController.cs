@@ -10,6 +10,7 @@ using System;
 
 namespace LR_WEB_API.Controllers
 {
+    
     [Route("api/companies")]
     [ApiController]
     public class CompaniesController : ControllerBase
@@ -117,7 +118,12 @@ namespace LR_WEB_API.Controllers
             return NoContent();
         }
 
-
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
+        {
+            Response.Headers.Add("Allow", "GET, OPTIONS, POST");
+            return Ok();
+        }
 
     }
 }

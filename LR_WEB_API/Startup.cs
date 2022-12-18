@@ -41,6 +41,7 @@ public class Startup
         services.AddScoped<ValidateShipForPortExistsAttribute>();
         services.AddScoped<IDataShaper<EmployeeDTO>, DataShaper<EmployeeDTO>>();
         services.AddScoped<IDataShaper<ShipDTO>, DataShaper<ShipDTO>>();
+        services.ConfigureVersioning();
         services.Configure<ApiBehaviorOptions>(options =>{options.SuppressModelStateInvalidFilter = true;});
         services.AddControllers(config =>
         {
