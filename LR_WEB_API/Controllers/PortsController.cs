@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using LR_WEB_API.ActionFilters;
 using LR_WEB_API.ModelBinders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -46,20 +47,9 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePort([FromBody] PortForCreationDto port)
         {
-            if (port == null)
-            {
-                _logger.LogError("PortForCreationDto object sent from client is null.");
-            return BadRequest("PortForCreationDto object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the PortForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
             var portEntity = _mapper.Map<Port>(port);
             _repository.Ports.CreatePort(portEntity);
             await _repository.SaveAsync();
@@ -89,14 +79,10 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpPost("collection")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreatePortCollection([FromBody]
         IEnumerable<PortForCreationDto> portCollection)
         {
-            if (portCollection == null)
-            {
-                _logger.LogError("Port collection sent from client is null.");
-                return BadRequest("Port collection is null");
-            }
             var portEntities = _mapper.Map<IEnumerable<Port>>(portCollection);
             foreach (var port in portEntities)
             {
@@ -111,40 +97,21 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidatePortExistsAttribute))]
         public async Task<IActionResult> DeletePort(Guid id)
         {
-            var port = await _repository.Ports.GetPortAsync(id, trackChanges: false);
-            if (port == null)
-            {
-                _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var port = HttpContext.Items["port"] as Port;
             _repository.Ports.DeletePort(port);
             await _repository.SaveAsync();
             return NoContent();
         }
 
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidatePortExistsAttribute))]
         public async Task<IActionResult> UpdatePort(Guid id, [FromBody] PortForUpdateDto port)
         {
-            if (port == null)
-            {
-                _logger.LogError("PortForUpdateDto object sent from client is null.");
-                return BadRequest("PortForUpdateDto object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the PortForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
-            var portEntity =await _repository.Ports.GetPortAsync(id, trackChanges: true);
-            if (portEntity == null)
-            {
-                _logger.LogInfo($"Port with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var portEntity = HttpContext.Items["port"] as Port;
             _mapper.Map(port, portEntity);
             await _repository.SaveAsync();
             return NoContent();

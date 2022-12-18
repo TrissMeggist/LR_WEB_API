@@ -2,9 +2,12 @@
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestFeatures;
+using LR_WEB_API.ActionFilters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace LR_WEB_API.Controllers
 {
@@ -22,7 +25,7 @@ namespace LR_WEB_API.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetShipsForPorts(Guid portsId)
+        public async Task<IActionResult> GetShipsForPorts(Guid portsId, [FromQuery] ShipParameters shipParameters)
         {
             var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
             if (port == null)
@@ -30,7 +33,8 @@ namespace LR_WEB_API.Controllers
                 _logger.LogInfo($"Company with id: {portsId} doesn't exist in the database.");
             return NotFound();
             }
-            var shipFromDb = await _repository.Ships.GetShipsAsync(portsId, trackChanges: false);
+            var shipFromDb = await _repository.Ships.GetShipsAsync(portsId,shipParameters, trackChanges: false);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(shipFromDb.MetaData));
             var shipDTO = _mapper.Map<IEnumerable<ShipDTO>>(shipFromDb);
             return Ok(shipDTO);
         }
@@ -54,18 +58,9 @@ namespace LR_WEB_API.Controllers
             return Ok(ship);
         }
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateShipForPort(Guid portsId, [FromBody] ShipForCreationDto ship)
         {
-            if (ship == null)
-            {
-                _logger.LogError("ShipForCreationDto object sent from client is null.");
-            return BadRequest("ShipForCreationDto object is null");
-            }
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the ShipForCreationDto object");
-                return UnprocessableEntity(ModelState);
-            }
             var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
             if (port == null)
             {
@@ -84,58 +79,28 @@ namespace LR_WEB_API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ServiceFilter(typeof(ValidateShipForPortExistsAttribute))]
         public async Task<IActionResult> DeleteShipForPort(Guid portsId, Guid id)
         {
-            var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
-            if (port == null)
-            {
-                _logger.LogInfo($"Port with id: {portsId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var shipForPort = await _repository.Ships.GetShipAsync(portsId, id, trackChanges: false);
-            if (shipForPort == null)
-            {
-                _logger.LogInfo($"Ship with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var shipForPort = HttpContext.Items["ship"] as Ship;
             _repository.Ships.DeleteShip(shipForPort);
             await _repository.SaveAsync();
             return NoContent();
         }
 
         [HttpPut("{id}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        [ServiceFilter(typeof(ValidateShipForPortExistsAttribute))]
         public async Task<IActionResult> UpdateShipForPort(Guid portsId, Guid id, [FromBody] ShipForUpdateDto ship)
         {
-            if (ship == null)
-            {
-                _logger.LogError("ShipForUpdateDto object sent from client is null.");
-                return BadRequest("ShipForUpdateDto object is null");
-            }
-
-            if (!ModelState.IsValid)
-            {
-                _logger.LogError("Invalid model state for the ShipForUpdateDto object");
-                return UnprocessableEntity(ModelState);
-            }
-
-            var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
-            if (port == null)
-            {
-                _logger.LogInfo($"Port with id: {portsId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var shipEntity = await _repository.Ships.GetShipAsync(portsId, id, trackChanges:true);
-            if (shipEntity == null)
-            {
-                _logger.LogInfo($"Ship with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+            var shipEntity = HttpContext.Items["ship"] as Ship;
             _mapper.Map(ship, shipEntity);
             await _repository.SaveAsync();
             return NoContent();
         }
 
         [HttpPatch("{id}")]
+        [ServiceFilter(typeof(ValidateShipForPortExistsAttribute))]
         public async Task<IActionResult> PartiallyUpdateShipForPort(Guid portsId, Guid id, [FromBody] JsonPatchDocument<ShipForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -143,18 +108,8 @@ namespace LR_WEB_API.Controllers
                 _logger.LogError("patchDoc object sent from client is null.");
                 return BadRequest("patchDoc object is null");
             }
-            var port = await _repository.Ports.GetPortAsync(portsId, trackChanges: false);
-            if (port == null)
-            {
-                _logger.LogInfo($"Port with id: {portsId} doesn't exist in the database.");
-                return NotFound();
-            }
-            var shipEntity = await _repository.Ships.GetShipAsync(portsId, id,trackChanges: true);
-            if (shipEntity == null)
-            {
-                _logger.LogInfo($"Ship with id: {id} doesn't exist in the database.");
-                return NotFound();
-            }
+
+            var shipEntity = HttpContext.Items["ship"] as Ship;
             var shipToPatch = _mapper.Map<ShipForUpdateDto>(shipEntity);
             patchDoc.ApplyTo(shipToPatch, ModelState);
             TryValidateModel(shipToPatch);
